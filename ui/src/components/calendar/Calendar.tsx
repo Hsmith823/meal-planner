@@ -8,11 +8,12 @@ import { useState, useEffect } from 'react'
 
 
 function Calendar()  {
-  const [cells, setCells] = useState<Cell[]>([])
-  const [selectedMoment, setSelectedMoment] = useState<moment.Moment>(moment())
-  const selectedMonth: number = 11
-  const selectedYear: number = 2026
+  const [cells, setCells] = useState<Cell[]>([]);
+  const [selectedMoment, setSelectedMoment] = useState<moment.Moment>(moment());
+  const selectedMonth: number = 11;
+  const selectedYear: number = 2026;
   const totalCells = 42; // days in a month can be spread across 6 weeks therefore totalCells = 7 days * 6
+  const today = new Date();
 
   useEffect(() => {
     // On load of component, the days for the selected calendar month need to be fetched
@@ -32,9 +33,15 @@ function Calendar()  {
 
       // For the days on the first week of the month which are not part of this month
       if ((_cellIndex < firstDayCellIndex) || (_dateCounter > daysThisMonth)) {
-        _cells.push(new Cell({day: null}))
+        _cells.push(new Cell({day: null, isToday: null}))
       } else {
-        _cells.push(new Cell({day: _dateCounter}))
+        const cellData = {day: _dateCounter, isToday: false}
+
+        if (today.getDate() === _dateCounter && (today.getMonth() + 1) === selectedMonth && today.getFullYear() === selectedYear) {
+          cellData.isToday = true
+        }
+
+        _cells.push(new Cell(cellData))
         _dateCounter++
       }
     }
@@ -45,7 +52,8 @@ function Calendar()  {
   return (
     <div id="calendar-component">
       <div id="info-pannel">
-        Today
+        <div id="selected-date">{today.toLocaleString('default', { month: 'long' })} {selectedYear}</div>
+        <div id="month-picker"></div>
       </div>
 
       <div id="calendar-container">
@@ -74,6 +82,10 @@ function Calendar()  {
 
               if (_cell.day === null) {
                 classes += " no-date"
+              }
+
+              if (_cell.isToday) {
+                classes += " today"
               }
 
               return <div className={classes} key={index}>

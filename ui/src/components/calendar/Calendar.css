@@ -12,6 +12,12 @@
 
 #info-pannel {
     width: 100%;
+    padding: 0.5em;
+    font-weight: 700;
+}
+
+#selected-date {
+    font-size: 1.8em;
 }
 
 #calendar-container {
@@ -49,6 +55,11 @@
 
 .no-date {
     background-color: var(--panel);
+}
+
+.today {
+    color: var(--main);
+    font-weight: 500;
 }
 
 #date-cells-container {
